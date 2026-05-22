@@ -8,14 +8,14 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'strapi.monis.rent',
-        pathname: '/uploads/**',
+        protocol: "https",
+        hostname: "strapi.monis.rent",
+        pathname: "/uploads/**",
       },
       {
-        protocol: 'https',
-        hostname: 'www.monis.rent',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "www.monis.rent",
+        pathname: "/**",
       },
     ],
   },

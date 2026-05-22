@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
-import type { WorkspaceState } from '@/types';
-import { DESKS, CHAIRS } from '@/data/products';
+import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import type { WorkspaceState } from "@/types";
+import { DESKS, CHAIRS } from "@/data/products";
 
 interface Props {
   state: WorkspaceState;
@@ -12,7 +12,14 @@ interface Props {
 }
 
 function Confetti() {
-  const colors = ['#F59E0B', '#10B981', '#3B82F6', '#EF4444', '#8B5CF6', '#EC4899'];
+  const colors = [
+    "#F59E0B",
+    "#10B981",
+    "#3B82F6",
+    "#EF4444",
+    "#8B5CF6",
+    "#EC4899",
+  ];
   const pieces = Array.from({ length: 40 }, (_, i) => ({
     id: i,
     color: colors[i % colors.length],
@@ -42,16 +49,21 @@ function Confetti() {
 }
 
 export default function CheckoutView({ state, total, onBack }: Props) {
-  const [step, setStep] = useState<'summary' | 'form' | 'success'>('summary');
+  const [step, setStep] = useState<"summary" | "form" | "success">("summary");
   const [showConfetti, setShowConfetti] = useState(false);
-  const [duration, setDuration] = useState<'weekly' | 'monthly'>('weekly');
-  const [form, setForm] = useState({ name: '', email: '', address: '', notes: '' });
+  const [duration, setDuration] = useState<"weekly" | "monthly">("weekly");
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    address: "",
+    notes: "",
+  });
   const [submitted, setSubmitted] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (step === 'form') nameRef.current?.focus();
-    if (step === 'success') {
+    if (step === "form") nameRef.current?.focus();
+    if (step === "success") {
       setShowConfetti(true);
       const t = setTimeout(() => setShowConfetti(false), 4000);
       return () => clearTimeout(t);
@@ -60,8 +72,8 @@ export default function CheckoutView({ state, total, onBack }: Props) {
 
   const priceWeekly = total;
   const priceMonthly = total * 4 * 0.75;
-  const displayPrice = duration === 'weekly' ? priceWeekly : priceMonthly;
-  const displayLabel = duration === 'weekly' ? '/week' : '/month';
+  const displayPrice = duration === "weekly" ? priceWeekly : priceMonthly;
+  const displayLabel = duration === "weekly" ? "/week" : "/month";
 
   const allItems = [
     ...(state.desk ? [state.desk] : []),
@@ -72,13 +84,13 @@ export default function CheckoutView({ state, total, onBack }: Props) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
-    setTimeout(() => setStep('success'), 500);
+    setTimeout(() => setStep("success"), 500);
   };
 
   // Build the monis.rent cart URL - link to their website
-  const monisRentUrl = 'https://www.monis.rent';
+  const monisRentUrl = "https://www.monis.rent";
 
-  if (step === 'success') {
+  if (step === "success") {
     return (
       <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-amber-50 to-orange-50 p-8">
         {showConfetti && <Confetti />}
@@ -88,9 +100,10 @@ export default function CheckoutView({ state, total, onBack }: Props) {
             Your workspace is on its way!
           </h1>
           <p className="text-stone-500 mb-6 text-sm leading-relaxed">
-            Thanks, <strong>{form.name || 'there'}</strong>! We&apos;re preparing your setup.
-            Our team will contact you at <strong>{form.email || 'your email'}</strong> to
-            confirm delivery details.
+            Thanks, <strong>{form.name || "there"}</strong>! We&apos;re
+            preparing your setup. Our team will contact you at{" "}
+            <strong>{form.email || "your email"}</strong> to confirm delivery
+            details.
           </p>
 
           {/* Setup summary */}
@@ -101,7 +114,7 @@ export default function CheckoutView({ state, total, onBack }: Props) {
             {allItems.map((item) => (
               <div key={item.id} className="flex justify-between text-sm">
                 <span className="text-stone-700">
-                  {item.emoji || '•'} {item.name}
+                  {item.emoji || "•"} {item.name}
                 </span>
                 <span className="font-semibold text-amber-600">
                   ${item.price}/wk
@@ -111,7 +124,8 @@ export default function CheckoutView({ state, total, onBack }: Props) {
             <div className="border-t border-amber-200 pt-2 mt-2 flex justify-between font-bold text-stone-800">
               <span>Total</span>
               <span className="text-amber-600">
-                ${displayPrice.toFixed(2)}{displayLabel}
+                ${displayPrice.toFixed(2)}
+                {displayLabel}
               </span>
             </div>
           </div>
@@ -141,39 +155,52 @@ export default function CheckoutView({ state, total, onBack }: Props) {
     );
   }
 
-  if (step === 'form') {
+  if (step === "form") {
     return (
       <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-amber-50 to-orange-50 p-6">
         <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-7 animate-slide-up">
-          <button onClick={() => setStep('summary')} className="text-stone-400 hover:text-stone-600 text-sm mb-4 flex items-center gap-1">
+          <button
+            onClick={() => setStep("summary")}
+            className="text-stone-400 hover:text-stone-600 text-sm mb-4 flex items-center gap-1"
+          >
             ← Back
           </button>
-          <h2 className="text-xl font-bold text-stone-800 mb-1">Almost there!</h2>
+          <h2 className="text-xl font-bold text-stone-800 mb-1">
+            Almost there!
+          </h2>
           <p className="text-stone-500 text-sm mb-5">
             Tell us where to deliver your workspace in Bali.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-stone-600 mb-1">Your Name</label>
+              <label className="block text-xs font-semibold text-stone-600 mb-1">
+                Your Name
+              </label>
               <input
                 ref={nameRef}
                 type="text"
                 required
                 placeholder="Alex Chen"
                 value={form.name}
-                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, name: e.target.value }))
+                }
                 className="w-full border border-stone-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-stone-600 mb-1">Email Address</label>
+              <label className="block text-xs font-semibold text-stone-600 mb-1">
+                Email Address
+              </label>
               <input
                 type="email"
                 required
                 placeholder="alex@example.com"
                 value={form.email}
-                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, email: e.target.value }))
+                }
                 className="w-full border border-stone-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
               />
             </div>
@@ -186,7 +213,9 @@ export default function CheckoutView({ state, total, onBack }: Props) {
                 required
                 placeholder="Jl. Pantai Berawa No. 12, Canggu"
                 value={form.address}
-                onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, address: e.target.value }))
+                }
                 className="w-full border border-stone-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent"
               />
             </div>
@@ -197,7 +226,9 @@ export default function CheckoutView({ state, total, onBack }: Props) {
               <textarea
                 placeholder="e.g. 3rd floor, need delivery before 10am"
                 value={form.notes}
-                onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
+                onChange={(e) =>
+                  setForm((f) => ({ ...f, notes: e.target.value }))
+                }
                 rows={2}
                 className="w-full border border-stone-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent resize-none"
               />
@@ -209,18 +240,20 @@ export default function CheckoutView({ state, total, onBack }: Props) {
                 Rental Duration
               </label>
               <div className="flex gap-2">
-                {(['weekly', 'monthly'] as const).map((d) => (
+                {(["weekly", "monthly"] as const).map((d) => (
                   <button
                     key={d}
                     type="button"
                     onClick={() => setDuration(d)}
                     className={`flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${
                       duration === d
-                        ? 'border-amber-500 bg-amber-50 text-amber-700'
-                        : 'border-stone-200 text-stone-500 hover:border-stone-300'
+                        ? "border-amber-500 bg-amber-50 text-amber-700"
+                        : "border-stone-200 text-stone-500 hover:border-stone-300"
                     }`}
                   >
-                    {d === 'weekly' ? `$${priceWeekly.toFixed(2)}/wk` : `$${priceMonthly.toFixed(2)}/mo (save 25%)`}
+                    {d === "weekly"
+                      ? `$${priceWeekly.toFixed(2)}/wk`
+                      : `$${priceMonthly.toFixed(2)}/mo (save 25%)`}
                   </button>
                 ))}
               </div>
@@ -231,7 +264,9 @@ export default function CheckoutView({ state, total, onBack }: Props) {
               disabled={submitted}
               className="w-full py-3.5 rounded-xl bg-amber-500 hover:bg-amber-400 disabled:opacity-60 text-white font-bold tracking-wide transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] mt-2"
             >
-              {submitted ? 'Submitting...' : `🏄 Confirm Rental — $${displayPrice.toFixed(2)}${displayLabel}`}
+              {submitted
+                ? "Submitting..."
+                : `🏄 Confirm Rental — $${displayPrice.toFixed(2)}${displayLabel}`}
             </button>
           </form>
         </div>
@@ -248,7 +283,9 @@ export default function CheckoutView({ state, total, onBack }: Props) {
           onClick={onBack}
           className="flex items-center gap-2 text-stone-500 hover:text-stone-700 text-sm mb-6 transition-colors group"
         >
-          <span className="group-hover:-translate-x-0.5 transition-transform">←</span>
+          <span className="group-hover:-translate-x-0.5 transition-transform">
+            ←
+          </span>
           Back to builder
         </button>
 
@@ -278,15 +315,20 @@ export default function CheckoutView({ state, total, onBack }: Props) {
                       unoptimized
                       onError={(e) => {
                         const img = e.currentTarget as HTMLImageElement;
-                        img.style.display = 'none';
+                        img.style.display = "none";
                         const p = img.parentElement;
-                        if (p) p.innerHTML = `<span class="flex items-center justify-center w-full h-full text-2xl">${item.emoji || '📦'}</span>`;
+                        if (p)
+                          p.innerHTML = `<span class="flex items-center justify-center w-full h-full text-2xl">${item.emoji || "📦"}</span>`;
                       }}
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-stone-800 text-sm truncate">{item.name}</p>
-                    <p className="text-xs text-stone-500 capitalize">{item.category}</p>
+                    <p className="font-semibold text-stone-800 text-sm truncate">
+                      {item.name}
+                    </p>
+                    <p className="text-xs text-stone-500 capitalize">
+                      {item.category}
+                    </p>
                   </div>
                   <span className="font-bold text-amber-600 text-sm shrink-0">
                     ${item.price}/wk
@@ -301,20 +343,31 @@ export default function CheckoutView({ state, total, onBack }: Props) {
                 Billing Period
               </p>
               <div className="flex gap-2">
-                {(['weekly', 'monthly'] as const).map((d) => (
+                {(["weekly", "monthly"] as const).map((d) => (
                   <button
                     key={d}
                     onClick={() => setDuration(d)}
                     className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border-2 transition-all ${
                       duration === d
-                        ? 'border-amber-500 bg-amber-50 text-amber-700'
-                        : 'border-stone-200 text-stone-500 hover:border-stone-300'
+                        ? "border-amber-500 bg-amber-50 text-amber-700"
+                        : "border-stone-200 text-stone-500 hover:border-stone-300"
                     }`}
                   >
-                    {d === 'weekly' ? (
-                      <span>Weekly <span className="font-bold">${priceWeekly.toFixed(2)}</span></span>
+                    {d === "weekly" ? (
+                      <span>
+                        Weekly{" "}
+                        <span className="font-bold">
+                          ${priceWeekly.toFixed(2)}
+                        </span>
+                      </span>
                     ) : (
-                      <span>Monthly <span className="font-bold">${priceMonthly.toFixed(2)}</span> <span className="text-green-600 text-xs">save 25%</span></span>
+                      <span>
+                        Monthly{" "}
+                        <span className="font-bold">
+                          ${priceMonthly.toFixed(2)}
+                        </span>{" "}
+                        <span className="text-green-600 text-xs">save 25%</span>
+                      </span>
                     )}
                   </button>
                 ))}
@@ -324,10 +377,12 @@ export default function CheckoutView({ state, total, onBack }: Props) {
             {/* Total */}
             <div className="flex justify-between items-center bg-amber-50 rounded-2xl px-5 py-4 mb-6">
               <div>
-                <p className="text-xs text-stone-500 font-medium">Grand Total</p>
+                <p className="text-xs text-stone-500 font-medium">
+                  Grand Total
+                </p>
                 <p className="text-stone-600 text-sm">
-                  {allItems.length} item{allItems.length !== 1 ? 's' : ''}
-                  {' · '}
+                  {allItems.length} item{allItems.length !== 1 ? "s" : ""}
+                  {" · "}
                   {duration} billing
                 </p>
               </div>
@@ -342,13 +397,26 @@ export default function CheckoutView({ state, total, onBack }: Props) {
             {/* Trust badges */}
             <div className="grid grid-cols-3 gap-2 mb-6">
               {[
-                { icon: '⚡', label: 'Same-day Delivery', sub: 'Available in Bali' },
-                { icon: '🛡️', label: 'Insured Gear', sub: 'Covered if it breaks' },
-                { icon: '↩️', label: 'Free Return', sub: 'We pick it up' },
+                {
+                  icon: "⚡",
+                  label: "Same-day Delivery",
+                  sub: "Available in Bali",
+                },
+                {
+                  icon: "🛡️",
+                  label: "Insured Gear",
+                  sub: "Covered if it breaks",
+                },
+                { icon: "↩️", label: "Free Return", sub: "We pick it up" },
               ].map((b) => (
-                <div key={b.label} className="bg-stone-50 rounded-xl p-3 text-center border border-stone-100">
+                <div
+                  key={b.label}
+                  className="bg-stone-50 rounded-xl p-3 text-center border border-stone-100"
+                >
                   <p className="text-xl">{b.icon}</p>
-                  <p className="text-xs font-semibold text-stone-700 mt-1">{b.label}</p>
+                  <p className="text-xs font-semibold text-stone-700 mt-1">
+                    {b.label}
+                  </p>
                   <p className="text-[10px] text-stone-400">{b.sub}</p>
                 </div>
               ))}
@@ -356,10 +424,11 @@ export default function CheckoutView({ state, total, onBack }: Props) {
 
             {/* CTA */}
             <button
-              onClick={() => setStep('form')}
+              onClick={() => setStep("form")}
               className="w-full py-4 rounded-2xl bg-amber-500 hover:bg-amber-400 text-white font-bold text-base tracking-wide transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] shadow-xl shadow-amber-200"
             >
-              🏄 Continue to Book — ${displayPrice.toFixed(2)}{displayLabel}
+              🏄 Continue to Book — ${displayPrice.toFixed(2)}
+              {displayLabel}
             </button>
           </div>
         </div>

@@ -1,16 +1,16 @@
-export type ProductCategory = 'desk' | 'chair' | 'accessory';
+export type ProductCategory = "desk" | "chair" | "accessory";
 
 export type SceneSlot =
-  | 'monitor-left'
-  | 'monitor-center'
-  | 'monitor-right'
-  | 'lamp'
-  | 'keyboard'
-  | 'mouse'
-  | 'webcam'
-  | 'coffee'
-  | 'plant'
-  | 'whiteboard';
+  | "monitor-left"
+  | "monitor-center"
+  | "monitor-right"
+  | "lamp"
+  | "keyboard"
+  | "mouse"
+  | "webcam"
+  | "coffee"
+  | "plant"
+  | "whiteboard";
 
 export interface Product {
   id: string;

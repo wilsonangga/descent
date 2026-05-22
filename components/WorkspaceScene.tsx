@@ -1,363 +1,450 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import type { WorkspaceState, Product } from '@/types';
+import Image from "next/image";
+import type { WorkspaceState } from "@/types";
 
 interface Props {
   state: WorkspaceState;
 }
 
-function SceneItem({
-  src,
-  alt,
-  style,
-  className = '',
-  emoji,
-}: {
-  src?: string;
-  alt: string;
-  style: React.CSSProperties;
-  className?: string;
-  emoji?: string;
-}) {
-  return (
-    <div
-      className={`absolute transition-all duration-500 ease-out ${className}`}
-      style={style}
-    >
-      {src ? (
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          className="object-contain drop-shadow-lg"
-          unoptimized
-          onError={(e) => {
-            const el = e.currentTarget as HTMLImageElement;
-            el.style.display = 'none';
-            const parent = el.parentElement;
-            if (parent) parent.dataset.fallback = 'true';
-          }}
-        />
-      ) : (
-        <span className="flex items-center justify-center w-full h-full text-5xl">
-          {emoji}
-        </span>
-      )}
-    </div>
-  );
+function imgErr(emoji: string) {
+  return (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget as HTMLImageElement;
+    img.style.display = "none";
+    const p = img.parentElement;
+    if (p)
+      p.insertAdjacentHTML(
+        "beforeend",
+        `<span class="absolute inset-0 flex items-end justify-center pb-1 text-4xl pointer-events-none">${emoji}</span>`,
+      );
+  };
 }
 
 export default function WorkspaceScene({ state }: Props) {
   const { desk, chair, accessories } = state;
 
   const hasItem = (id: string) => accessories.some((a) => a.id === id);
-  const getItem = (id: string): Product | undefined =>
-    accessories.find((a) => a.id === id);
-
   const monitors = accessories.filter((a) =>
-    ['monitor-24', 'monitor-27-4k'].includes(a.id)
+    ["monitor-24", "monitor-27-4k"].includes(a.id),
   );
-  const hasKeyboard = hasItem('keyboard');
-  const hasMouse = hasItem('mouse');
-  const hasLamp = hasItem('lamp');
-  const hasWebcam = hasItem('webcam');
-  const hasCoffee = hasItem('coffee');
-  const hasPlant = hasItem('plant');
+  const hasKeyboard = hasItem("keyboard");
+  const hasMouse = hasItem("mouse");
+  const hasLamp = hasItem("lamp");
+  const hasWebcam = hasItem("webcam");
+  const hasCoffee = hasItem("coffee");
+  const hasPlant = hasItem("plant");
+
+  const deskColor =
+    desk?.id === "mechanical-desk"
+      ? "linear-gradient(180deg,#7C5C1A 0%,#6A4E15 55%,#4A370E 100%)"
+      : "linear-gradient(180deg,#23204A 0%,#1C1A3E 55%,#131130 100%)";
 
   return (
-    <div className="relative w-full h-full overflow-hidden rounded-2xl select-none">
-      {/* ── ROOM BACKGROUND ── */}
-      <div className="absolute inset-0 bg-linear-to-b from-[#F5EDE0] via-[#EFE3D0] to-[#D4B896]" />
-
-      {/* Wall texture / tropical accent */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-linear-to-bl from-[#C8A86B] to-transparent rounded-full blur-3xl" />
-        <div className="absolute top-0 left-0 w-48 h-48 bg-linear-to-br from-[#7BAE7F] to-transparent rounded-full blur-3xl" />
-      </div>
-
-      {/* ── WALL SECTION (top 55%) ── */}
-      <div className="absolute inset-x-0 top-0 h-[55%] bg-linear-to-b from-[#FBF4EB] to-[#F0E5D0]" />
-
-      {/* Window light effect */}
+    <div
+      className="relative w-full h-full overflow-hidden select-none"
+      style={{ background: "linear-gradient(180deg,#0B0920 0%,#100D26 100%)" }}
+    >
+      {/* ── DEEP BACKGROUND GLOW ── */}
       <div
-        className="absolute top-2 left-1/2 -translate-x-1/2 w-40 h-28 opacity-30 rounded-b-xl"
+        className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'linear-gradient(180deg, rgba(255,241,200,0.8) 0%, transparent 100%)',
-          boxShadow: '0 20px 60px rgba(255,220,100,0.3)',
+            "radial-gradient(ellipse 80% 50% at 50% 0%,rgba(80,60,180,0.18) 0%,transparent 70%)",
         }}
       />
 
-      {/* ── FLOOR SECTION (bottom 45%) ── */}
+      {/* ── WALL ── */}
       <div
-        className="absolute inset-x-0 bottom-0 h-[46%]"
+        className="absolute inset-x-0 top-0 h-[56%]"
         style={{
           background:
-            'linear-gradient(180deg, #C9A880 0%, #B8956A 50%, #A07850 100%)',
+            "linear-gradient(180deg,#13103A 0%,#0F0D2E 70%,#0D0B28 100%)",
         }}
       />
 
-      {/* Floor grain */}
-      <div className="absolute inset-x-0 bottom-0 h-[46%] opacity-10"
+      {/* Subtle wall horizontal line texture */}
+      <div
+        className="absolute inset-x-0 top-0 h-[56%] opacity-[0.04]"
         style={{
-          backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 40px, rgba(0,0,0,0.05) 40px, rgba(0,0,0,0.05) 41px)',
+          backgroundImage:
+            "repeating-linear-gradient(0deg,transparent,transparent 28px,rgba(255,255,255,1) 28px,rgba(255,255,255,1) 29px)",
         }}
       />
 
-      {/* Wall / floor divider */}
-      <div className="absolute inset-x-0 h-0.75 bg-[#C4A07A]/60" style={{ top: '54%' }} />
+      {/* ── MONITOR GLOW — ambient light cast on wall ── */}
+      {monitors.length > 0 && (
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: "15%",
+            right: "15%",
+            bottom: "30%",
+            height: "44%",
+            background:
+              "radial-gradient(ellipse 70% 80% at 50% 70%,rgba(60,100,255,0.10) 0%,transparent 70%)",
+            filter: "blur(14px)",
+            animation: "fadeIn 0.8s ease-out",
+          }}
+        />
+      )}
 
-      {/* ── PLANT (left side, floor) ── */}
+      {/* ── LAMP WARM GLOW ── */}
+      {hasLamp && (
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            right: "8%",
+            bottom: "28%",
+            width: "34%",
+            height: "50%",
+            background:
+              "radial-gradient(ellipse at 85% 60%,rgba(255,190,50,0.13) 0%,transparent 60%)",
+            filter: "blur(12px)",
+            animation: "fadeIn 0.6s ease-out",
+          }}
+        />
+      )}
+
+      {/* ── WALL / FLOOR DIVIDE ── */}
+      <div
+        className="absolute inset-x-0 h-px"
+        style={{ top: "56%", background: "rgba(255,255,255,0.04)" }}
+      />
+
+      {/* ── FLOOR ── */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-[44%]"
+        style={{
+          background:
+            "linear-gradient(180deg,#1D1108 0%,#150C05 60%,#0E0803 100%)",
+        }}
+      />
+
+      {/* Floor plank grain */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-[44%] opacity-[0.07]"
+        style={{
+          backgroundImage:
+            "repeating-linear-gradient(92deg,transparent,transparent 70px,rgba(255,200,80,1) 70px,rgba(255,200,80,1) 71px)",
+        }}
+      />
+
+      {/* ── PLANT ── */}
       {hasPlant && (
         <div
-          className="absolute transition-all duration-700 ease-out"
+          className="absolute"
           style={{
-            left: '3%',
-            bottom: '14%',
-            width: '10%',
-            height: '26%',
-            animation: 'popIn 0.5s ease-out',
+            left: "2%",
+            bottom: "14%",
+            width: "9%",
+            height: "30%",
+            animation: "popIn 0.5s cubic-bezier(0.34,1.56,0.64,1)",
           }}
         >
-          <span className="flex items-end justify-center w-full h-full text-6xl pb-2">🌿</span>
+          <span className="flex items-end justify-center w-full h-full text-5xl pb-1">
+            🌿
+          </span>
         </div>
       )}
 
-      {/* ── DESK UNIT ── */}
-      {/* Desk legs */}
-      <div
-        className="absolute"
-        style={{
-          left: '14%',
-          bottom: '14%',
-          width: '3%',
-          height: '12%',
-          background: 'linear-gradient(180deg, #5a3e28 0%, #3d2918 100%)',
-          borderRadius: '3px',
-        }}
-      />
-      <div
-        className="absolute"
-        style={{
-          right: '14%',
-          bottom: '14%',
-          width: '3%',
-          height: '12%',
-          background: 'linear-gradient(180deg, #5a3e28 0%, #3d2918 100%)',
-          borderRadius: '3px',
-        }}
-      />
+      {/* ── DESK LEGS ── */}
+      {desk && (
+        <>
+          <div
+            className="absolute"
+            style={{
+              left: "17%",
+              bottom: "14.5%",
+              width: "2.5%",
+              height: "10%",
+              background:
+                "linear-gradient(180deg,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0.02) 100%)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: "3px",
+            }}
+          />
+          <div
+            className="absolute"
+            style={{
+              right: "17%",
+              bottom: "14.5%",
+              width: "2.5%",
+              height: "10%",
+              background:
+                "linear-gradient(180deg,rgba(255,255,255,0.07) 0%,rgba(255,255,255,0.02) 100%)",
+              border: "1px solid rgba(255,255,255,0.06)",
+              borderRadius: "3px",
+            }}
+          />
+        </>
+      )}
 
-      {/* Desk surface */}
+      {/* ── DESK SURFACE ── */}
       <div
         className="absolute transition-all duration-500"
         style={{
-          left: '12%',
-          bottom: '24%',
-          width: '76%',
-          height: '18%',
-          borderRadius: '8px 8px 4px 4px',
-          background: desk?.id === 'mechanical-desk'
-            ? 'linear-gradient(180deg, #8B6914 0%, #7A5C10 60%, #5C450D 100%)'
-            : 'linear-gradient(180deg, #4A3728 0%, #3D2E1F 60%, #2E2216 100%)',
-          boxShadow: '0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15)',
+          left: "14%",
+          bottom: "23%",
+          width: "72%",
+          height: "16%",
+          borderRadius: "8px 8px 4px 4px",
+          background: desk ? deskColor : "rgba(255,255,255,0.04)",
+          boxShadow: desk
+            ? "0 12px 40px rgba(0,0,0,0.7),0 2px 8px rgba(0,0,0,0.5),inset 0 1px 0 rgba(255,255,255,0.12)"
+            : "none",
+          border: desk ? "none" : "1px dashed rgba(255,255,255,0.10)",
         }}
       >
-        {/* Desk surface highlight */}
-        <div
-          className="absolute top-0 inset-x-4 h-0.75 rounded-full opacity-30"
-          style={{ background: 'rgba(255,255,255,0.6)' }}
-        />
-
-        {/* Cable management slot */}
-        <div className="absolute bottom-2 right-6 w-8 h-1 bg-black/20 rounded-full" />
-
-        {/* Electric adjustment label */}
-        {desk?.id === 'electric-desk' && (
-          <div className="absolute top-2 right-3 text-[8px] text-white/40 font-mono tracking-wider">
-            ▲ ▼
+        {desk ? (
+          <>
+            <div
+              className="absolute top-0 inset-x-6 h-px rounded-full"
+              style={{ background: "rgba(255,255,255,0.14)" }}
+            />
+            <div className="absolute bottom-2 right-4 text-[8px] font-mono tracking-widest opacity-20 text-white">
+              {desk.id === "electric-desk" ? "⚡ ELEC" : "◈ MECH"}
+            </div>
+          </>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <span className="text-white/20 text-xs font-medium">
+              Choose a desk
+            </span>
           </div>
         )}
       </div>
 
-      {/* ── ITEMS ON DESK ── */}
+      {/* Desk front-face depth strip */}
+      {desk && (
+        <div
+          className="absolute"
+          style={{
+            left: "14%",
+            width: "72%",
+            bottom: "21.5%",
+            height: "1.5%",
+            background: "rgba(0,0,0,0.45)",
+            borderRadius: "0 0 4px 4px",
+          }}
+        />
+      )}
 
-      {/* Coffee machine - left side of desk */}
+      {/* ── COFFEE ── */}
       {hasCoffee && (
         <div
-          className="absolute transition-all duration-500"
+          className="absolute"
           style={{
-            left: '15%',
-            bottom: '37%',
-            width: '9%',
-            height: '14%',
-            animation: 'popIn 0.4s ease-out',
+            left: "16%",
+            bottom: "37.5%",
+            width: "9%",
+            height: "14%",
+            animation: "popIn 0.4s cubic-bezier(0.34,1.56,0.64,1)",
           }}
         >
+          <div
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-full"
+            style={{
+              width: "80%",
+              height: "5px",
+              background:
+                "radial-gradient(ellipse,rgba(0,0,0,0.7) 0%,transparent 70%)",
+              filter: "blur(2px)",
+            }}
+          />
           <Image
             src="https://strapi.monis.rent/uploads/Nespresso_Essenza_3_9f9b8a04a2.jpg"
             alt="Coffee Machine"
             fill
-            className="object-contain drop-shadow-xl"
+            className="object-contain drop-shadow-2xl"
             unoptimized
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).style.display = 'none';
-              const p = (e.currentTarget as HTMLImageElement).parentElement;
-              if (p) p.innerHTML = '<span class="flex items-end justify-center w-full h-full text-4xl">☕</span>';
-            }}
+            onError={imgErr("☕")}
           />
         </div>
       )}
 
-      {/* Lamp */}
+      {/* ── LAMP ── */}
       {hasLamp && (
         <div
-          className="absolute transition-all duration-500"
+          className="absolute"
           style={{
-            right: '16%',
-            bottom: '38%',
-            width: '7%',
-            height: '20%',
-            animation: 'popIn 0.4s ease-out',
+            right: "17%",
+            bottom: "36.5%",
+            width: "7%",
+            height: "22%",
+            animation: "popIn 0.4s cubic-bezier(0.34,1.56,0.64,1)",
           }}
         >
+          <div
+            className="absolute bottom-0 left-1/2 -translate-x-1/2 rounded-full"
+            style={{
+              width: "100%",
+              height: "5px",
+              background:
+                "radial-gradient(ellipse,rgba(0,0,0,0.7) 0%,transparent 70%)",
+              filter: "blur(2px)",
+            }}
+          />
           <Image
             src="https://strapi.monis.rent/uploads/Xiaomi_Mi_Led_Desk_Lamp_1_S_4_928d77715a.jpg"
             alt="Desk Lamp"
             fill
-            className="object-contain drop-shadow-xl"
+            className="object-contain drop-shadow-2xl"
             unoptimized
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).style.display = 'none';
-              const p = (e.currentTarget as HTMLImageElement).parentElement;
-              if (p) p.innerHTML = '<span class="flex items-end justify-center w-full h-full text-4xl">💡</span>';
-            }}
+            onError={imgErr("💡")}
           />
-          {/* Lamp glow effect */}
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-12 bg-yellow-300/20 rounded-full blur-xl" />
         </div>
       )}
 
-      {/* Monitors */}
-      {monitors.length > 0 && (
-        <>
-          {monitors.map((monitor, idx) => {
-            const totalMonitors = monitors.length;
-            let leftPos = '35%';
-            if (totalMonitors === 1) leftPos = '35%';
-            else if (idx === 0) leftPos = '22%';
-            else leftPos = '50%';
-
-            return (
+      {/* ── MONITORS ── */}
+      {monitors.map((monitor, idx) => {
+        const total = monitors.length;
+        const leftPct = total === 1 ? 34 : idx === 0 ? 21 : 51;
+        const wPct = total === 1 ? 30 : 25;
+        const hPct = total === 1 ? 33 : 28;
+        return (
+          <div
+            key={monitor.id}
+            className="absolute transition-all duration-500"
+            style={{
+              left: `${leftPct}%`,
+              bottom: "37%",
+              width: `${wPct}%`,
+              height: `${hPct}%`,
+              animation: "popIn 0.45s cubic-bezier(0.34,1.56,0.64,1)",
+            }}
+          >
+            {/* Ground shadow on desk */}
+            <div
+              className="absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full"
+              style={{
+                width: "60%",
+                height: "8px",
+                background:
+                  "radial-gradient(ellipse,rgba(0,0,0,0.8) 0%,transparent 70%)",
+                filter: "blur(4px)",
+              }}
+            />
+            <Image
+              src={monitor.image}
+              alt={monitor.name}
+              fill
+              className="object-contain drop-shadow-2xl"
+              unoptimized
+              onError={imgErr("🖥️")}
+            />
+            {idx === 0 && hasWebcam && (
               <div
-                key={monitor.id}
-                className="absolute transition-all duration-500"
-                style={{
-                  left: leftPos,
-                  bottom: '36%',
-                  width: totalMonitors === 1 ? '28%' : '24%',
-                  height: totalMonitors === 1 ? '30%' : '26%',
-                  animation: 'popIn 0.45s ease-out',
-                }}
+                className="absolute -top-3 left-1/2 -translate-x-1/2 w-9 h-7"
+                style={{ animation: "popIn 0.3s ease-out" }}
               >
                 <Image
-                  src={monitor.image}
-                  alt={monitor.name}
+                  src="https://strapi.monis.rent/uploads/Logitech_4_K_Webcam_5_f91e71c14c.jpg"
+                  alt="Webcam"
                   fill
-                  className="object-contain drop-shadow-2xl"
+                  className="object-contain"
                   unoptimized
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).style.display = 'none';
-                    const p = (e.currentTarget as HTMLImageElement).parentElement;
-                    if (p) p.innerHTML = '<span class="flex items-end justify-center w-full h-full text-5xl">🖥️</span>';
-                  }}
+                  onError={imgErr("📷")}
                 />
-                {/* Webcam on top of first monitor */}
-                {idx === 0 && hasWebcam && (
-                  <div
-                    className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-8"
-                    style={{ animation: 'popIn 0.3s ease-out' }}
-                  >
-                    <Image
-                      src="https://strapi.monis.rent/uploads/Logitech_4_K_Webcam_5_f91e71c14c.jpg"
-                      alt="Webcam"
-                      fill
-                      className="object-contain drop-shadow-md"
-                      unoptimized
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.display = 'none';
-                        const p = (e.currentTarget as HTMLImageElement).parentElement;
-                        if (p) p.innerHTML = '📷';
-                      }}
-                    />
-                  </div>
-                )}
               </div>
-            );
-          })}
-        </>
-      )}
+            )}
+          </div>
+        );
+      })}
 
-      {/* Keyboard */}
+      {/* ── KEYBOARD ── */}
       {hasKeyboard && (
         <div
-          className="absolute transition-all duration-500"
+          className="absolute"
           style={{
-            left: '28%',
-            bottom: '26%',
-            width: '28%',
-            height: '8%',
-            animation: 'popIn 0.4s ease-out',
+            left: "27%",
+            bottom: "25.5%",
+            width: "30%",
+            height: "8%",
+            animation: "popIn 0.4s cubic-bezier(0.34,1.56,0.64,1)",
           }}
         >
+          <div
+            className="absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full"
+            style={{
+              width: "90%",
+              height: "6px",
+              background:
+                "radial-gradient(ellipse,rgba(0,0,0,0.9) 0%,transparent 70%)",
+              filter: "blur(3px)",
+            }}
+          />
           <Image
             src="https://strapi.monis.rent/uploads/Logitech_MX_keys_1_9977480ae1.jpg"
             alt="Keyboard"
             fill
-            className="object-contain drop-shadow-lg"
+            className="object-contain drop-shadow-xl"
             unoptimized
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).style.display = 'none';
-              const p = (e.currentTarget as HTMLImageElement).parentElement;
-              if (p) p.innerHTML = '<span class="flex items-end justify-center w-full h-full text-4xl">⌨️</span>';
-            }}
+            onError={imgErr("⌨️")}
           />
         </div>
       )}
 
-      {/* Mouse */}
+      {/* ── MOUSE ── */}
       {hasMouse && (
         <div
-          className="absolute transition-all duration-500"
+          className="absolute"
           style={{
-            left: hasMouse && hasKeyboard ? '58%' : '50%',
-            bottom: '26%',
-            width: '6%',
-            height: '9%',
-            animation: 'popIn 0.4s ease-out',
+            left: hasKeyboard ? "59%" : "50%",
+            bottom: "25.5%",
+            width: "7%",
+            height: "10%",
+            animation: "popIn 0.4s cubic-bezier(0.34,1.56,0.64,1)",
           }}
         >
+          <div
+            className="absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full"
+            style={{
+              width: "85%",
+              height: "5px",
+              background:
+                "radial-gradient(ellipse,rgba(0,0,0,0.9) 0%,transparent 70%)",
+              filter: "blur(2px)",
+            }}
+          />
           <Image
             src="https://strapi.monis.rent/uploads/Logitech_S3_6_4cf1e523b8.jpg"
             alt="Mouse"
             fill
-            className="object-contain drop-shadow-lg"
+            className="object-contain drop-shadow-xl"
             unoptimized
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).style.display = 'none';
-              const p = (e.currentTarget as HTMLImageElement).parentElement;
-              if (p) p.innerHTML = '<span class="flex items-end justify-center w-full h-full text-3xl">🖱️</span>';
-            }}
+            onError={imgErr("🖱️")}
           />
         </div>
       )}
 
-      {/* ── DESK SELECTION INDICATOR ── */}
+      {/* ── EMPTY DESK HINT ── */}
+      {desk && monitors.length === 0 && !hasKeyboard && !hasMouse && !hasLamp && (
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            left: "50%",
+            bottom: "37%",
+            transform: "translateX(-50%)",
+            animation: "fadeIn 0.5s ease-out",
+          }}
+        >
+          <p className="text-white/20 text-xs font-medium whitespace-nowrap tracking-wide">
+            ✦ Add accessories above
+          </p>
+        </div>
+      )}
+
+      {/* ── NO DESK HINT ── */}
       {!desk && (
-        <div className="absolute" style={{ left: '12%', bottom: '24%', width: '76%', height: '18%' }}>
-          <div className="w-full h-full border-2 border-dashed border-[#C4A07A]/60 rounded-lg flex items-center justify-center">
-            <span className="text-[#9A7A5A] text-sm font-medium">Choose your desk ↓</span>
+        <div
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          style={{ bottom: "30%" }}
+        >
+          <div className="text-center">
+            <p className="text-3xl mb-2">🏝️</p>
+            <p className="text-white/25 text-sm font-medium">
+              Choose a desk to start
+            </p>
           </div>
         </div>
       )}
@@ -365,58 +452,48 @@ export default function WorkspaceScene({ state }: Props) {
       {/* ── CHAIR ── */}
       {chair ? (
         <div
-          className="absolute transition-all duration-500"
+          className="absolute"
           style={{
-            left: '37%',
-            bottom: '2%',
-            width: '26%',
-            height: '22%',
-            animation: 'slideUp 0.5s ease-out',
+            left: "37%",
+            bottom: "1%",
+            width: "26%",
+            height: "23%",
+            animation: "slideUp 0.5s ease-out",
           }}
         >
+          {/* Chair floor shadow */}
+          <div
+            className="absolute -bottom-1 left-1/2 -translate-x-1/2 rounded-full"
+            style={{
+              width: "75%",
+              height: "14px",
+              background:
+                "radial-gradient(ellipse,rgba(0,0,0,0.6) 0%,transparent 70%)",
+              filter: "blur(5px)",
+            }}
+          />
           <Image
             src={chair.image}
             alt={chair.name}
             fill
             className="object-contain drop-shadow-2xl"
             unoptimized
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).style.display = 'none';
-              const p = (e.currentTarget as HTMLImageElement).parentElement;
-              if (p) p.innerHTML = '<span class="flex items-end justify-center w-full h-full text-6xl">🪑</span>';
-            }}
+            onError={imgErr("🪑")}
           />
         </div>
       ) : (
         <div
-          className="absolute border-2 border-dashed border-[#C4A07A]/60 rounded-full flex items-center justify-center"
-          style={{ left: '38%', bottom: '2%', width: '24%', height: '20%' }}
+          className="absolute flex items-center justify-center"
+          style={{ left: "38%", bottom: "2%", width: "24%", height: "20%" }}
         >
-          <span className="text-[#9A7A5A] text-xs font-medium">Choose chair ↓</span>
-        </div>
-      )}
-
-      {/* ── EMPTY DESK HINT ── */}
-      {desk && monitors.length === 0 && !hasKeyboard && !hasMouse && !hasLamp && (
-        <div
-          className="absolute text-[#9A7A5A]/70 text-sm font-medium pointer-events-none"
-          style={{ left: '50%', bottom: '36%', transform: 'translateX(-50%)' }}
-        >
-          ✦ Add accessories to fill your desk
-        </div>
-      )}
-
-      {/* ── DESK BRAND BADGE ── */}
-      {desk && (
-        <div
-          className="absolute bottom-[42%] text-[10px] font-semibold tracking-widest uppercase opacity-30"
-          style={{
-            left: '50%',
-            transform: 'translateX(-50%)',
-            color: desk.id === 'mechanical-desk' ? '#fff' : '#ccc',
-          }}
-        >
-          {desk.id === 'electric-desk' ? '⚡ ELECTRIC' : '◈ MECHANICAL'}
+          <div
+            className="w-full h-full rounded-full flex items-center justify-center"
+            style={{
+              border: "1px dashed rgba(255,255,255,0.08)",
+            }}
+          >
+            <span className="text-white/20 text-xs">Choose chair</span>
+          </div>
         </div>
       )}
     </div>
