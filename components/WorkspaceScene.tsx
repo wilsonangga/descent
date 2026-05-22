@@ -418,21 +418,25 @@ export default function WorkspaceScene({ state }: Props) {
       )}
 
       {/* ── EMPTY DESK HINT ── */}
-      {desk && monitors.length === 0 && !hasKeyboard && !hasMouse && !hasLamp && (
-        <div
-          className="absolute pointer-events-none"
-          style={{
-            left: "50%",
-            bottom: "37%",
-            transform: "translateX(-50%)",
-            animation: "fadeIn 0.5s ease-out",
-          }}
-        >
-          <p className="text-white/20 text-xs font-medium whitespace-nowrap tracking-wide">
-            ✦ Add accessories above
-          </p>
-        </div>
-      )}
+      {desk &&
+        monitors.length === 0 &&
+        !hasKeyboard &&
+        !hasMouse &&
+        !hasLamp && (
+          <div
+            className="absolute pointer-events-none"
+            style={{
+              left: "50%",
+              bottom: "37%",
+              transform: "translateX(-50%)",
+              animation: "fadeIn 0.5s ease-out",
+            }}
+          >
+            <p className="text-white/20 text-xs font-medium whitespace-nowrap tracking-wide">
+              ✦ Add accessories above
+            </p>
+          </div>
+        )}
 
       {/* ── NO DESK HINT ── */}
       {!desk && (

@@ -25,7 +25,10 @@ export default function SummaryPanel({ state, total, onRent }: Props) {
         style={{ borderColor: "rgba(255,255,255,0.05)" }}
       >
         <h2 className="text-sm font-bold text-white">Your Setup</h2>
-        <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.30)" }}>
+        <p
+          className="text-xs mt-0.5"
+          style={{ color: "rgba(255,255,255,0.30)" }}
+        >
           {itemCount === 0
             ? "Nothing selected yet"
             : `${itemCount} item${itemCount !== 1 ? "s" : ""} selected`}
@@ -45,18 +48,26 @@ export default function SummaryPanel({ state, total, onRent }: Props) {
           {desk ? (
             <div
               className="flex items-center justify-between px-3 py-2.5 rounded-xl"
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.06)",
+              }}
             >
               <div className="flex items-center gap-2.5 min-w-0">
                 <span className="text-xl shrink-0">{desk.emoji ?? "🖥️"}</span>
-                <span className="text-sm text-white font-medium truncate">{desk.name}</span>
+                <span className="text-sm text-white font-medium truncate">
+                  {desk.name}
+                </span>
               </div>
               <span className="text-sm font-bold text-amber-400 shrink-0 ml-2">
                 ${desk.price}/wk
               </span>
             </div>
           ) : (
-            <p className="text-xs italic px-1" style={{ color: "rgba(255,255,255,0.20)" }}>
+            <p
+              className="text-xs italic px-1"
+              style={{ color: "rgba(255,255,255,0.20)" }}
+            >
               Not selected
             </p>
           )}
@@ -73,18 +84,26 @@ export default function SummaryPanel({ state, total, onRent }: Props) {
           {chair ? (
             <div
               className="flex items-center justify-between px-3 py-2.5 rounded-xl"
-              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.06)",
+              }}
             >
               <div className="flex items-center gap-2.5 min-w-0">
                 <span className="text-xl shrink-0">{chair.emoji ?? "🪑"}</span>
-                <span className="text-sm text-white font-medium truncate">{chair.name}</span>
+                <span className="text-sm text-white font-medium truncate">
+                  {chair.name}
+                </span>
               </div>
               <span className="text-sm font-bold text-amber-400 shrink-0 ml-2">
                 ${chair.price}/wk
               </span>
             </div>
           ) : (
-            <p className="text-xs italic px-1" style={{ color: "rgba(255,255,255,0.20)" }}>
+            <p
+              className="text-xs italic px-1"
+              style={{ color: "rgba(255,255,255,0.20)" }}
+            >
               Not selected
             </p>
           )}
@@ -104,11 +123,17 @@ export default function SummaryPanel({ state, total, onRent }: Props) {
                 <div
                   key={a.id}
                   className="flex items-center justify-between px-3 py-2 rounded-lg"
-                  style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.05)" }}
+                  style={{
+                    background: "rgba(255,255,255,0.03)",
+                    border: "1px solid rgba(255,255,255,0.05)",
+                  }}
                 >
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-base shrink-0">{a.emoji}</span>
-                    <span className="text-xs font-medium truncate" style={{ color: "rgba(255,255,255,0.65)" }}>
+                    <span
+                      className="text-xs font-medium truncate"
+                      style={{ color: "rgba(255,255,255,0.65)" }}
+                    >
                       {a.name}
                     </span>
                   </div>
@@ -125,10 +150,16 @@ export default function SummaryPanel({ state, total, onRent }: Props) {
         {itemCount === 0 && (
           <div className="py-8 text-center">
             <p className="text-3xl mb-3">🏝️</p>
-            <p className="text-sm font-semibold" style={{ color: "rgba(255,255,255,0.25)" }}>
+            <p
+              className="text-sm font-semibold"
+              style={{ color: "rgba(255,255,255,0.25)" }}
+            >
               Start building
             </p>
-            <p className="text-xs mt-1" style={{ color: "rgba(255,255,255,0.15)" }}>
+            <p
+              className="text-xs mt-1"
+              style={{ color: "rgba(255,255,255,0.15)" }}
+            >
               Pick a desk and chair to begin
             </p>
           </div>
@@ -149,7 +180,10 @@ export default function SummaryPanel({ state, total, onRent }: Props) {
           }}
         >
           <span className="text-sm">⚡</span>
-          <p className="text-xs font-semibold" style={{ color: "rgba(134,239,172,0.85)" }}>
+          <p
+            className="text-xs font-semibold"
+            style={{ color: "rgba(134,239,172,0.85)" }}
+          >
             Same-day delivery in Bali
           </p>
         </div>
@@ -164,14 +198,18 @@ export default function SummaryPanel({ state, total, onRent }: Props) {
         >
           <div className="flex justify-between text-xs">
             <span style={{ color: "rgba(255,255,255,0.38)" }}>Weekly</span>
-            <span className="font-semibold text-white">${total.toFixed(2)}</span>
+            <span className="font-semibold text-white">
+              ${total.toFixed(2)}
+            </span>
           </div>
           <div className="flex justify-between text-xs">
             <span style={{ color: "rgba(255,255,255,0.38)" }}>
               Monthly{" "}
               <span style={{ color: "rgba(134,239,172,0.8)" }}>−25%</span>
             </span>
-            <span className="font-semibold text-white">${monthly.toFixed(2)}</span>
+            <span className="font-semibold text-white">
+              ${monthly.toFixed(2)}
+            </span>
           </div>
         </div>
 
@@ -203,7 +241,8 @@ export default function SummaryPanel({ state, total, onRent }: Props) {
           }
           onMouseEnter={(e) => {
             if (hasSetup)
-              (e.currentTarget as HTMLButtonElement).style.transform = "scale(1.02)";
+              (e.currentTarget as HTMLButtonElement).style.transform =
+                "scale(1.02)";
           }}
           onMouseLeave={(e) => {
             (e.currentTarget as HTMLButtonElement).style.transform = "";
@@ -215,7 +254,11 @@ export default function SummaryPanel({ state, total, onRent }: Props) {
         {/* Trust signals */}
         <div className="flex items-center justify-center gap-3 pt-0.5">
           {["✓ Free delivery", "✓ Cancel anytime", "✓ Insured"].map((t) => (
-            <span key={t} className="text-[10px]" style={{ color: "rgba(255,255,255,0.18)" }}>
+            <span
+              key={t}
+              className="text-[10px]"
+              style={{ color: "rgba(255,255,255,0.18)" }}
+            >
               {t}
             </span>
           ))}
@@ -224,4 +267,3 @@ export default function SummaryPanel({ state, total, onRent }: Props) {
     </div>
   );
 }
-

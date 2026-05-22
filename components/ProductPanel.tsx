@@ -169,11 +169,15 @@ function AccessoryCard({
       </div>
       <p
         className="text-[11px] font-semibold leading-tight text-center line-clamp-2"
-        style={{ color: selected ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.55)" }}
+        style={{
+          color: selected ? "rgba(255,255,255,0.9)" : "rgba(255,255,255,0.55)",
+        }}
       >
         {product.name}
       </p>
-      <p className="text-[10px] font-bold text-amber-400">${product.price}/wk</p>
+      <p className="text-[10px] font-bold text-amber-400">
+        ${product.price}/wk
+      </p>
     </button>
   );
 }
@@ -279,4 +283,3 @@ export default function ProductPanel({
     </div>
   );
 }
-

@@ -100,7 +100,10 @@ export default function WorkspaceBuilder() {
               borderColor: "rgba(245,158,11,0.22)",
             }}
           >
-            <span className="text-xs" style={{ color: "rgba(255,255,255,0.45)" }}>
+            <span
+              className="text-xs"
+              style={{ color: "rgba(255,255,255,0.45)" }}
+            >
               Total
             </span>
             <span className="font-black text-amber-400 text-sm">
@@ -186,7 +189,11 @@ export default function WorkspaceBuilder() {
                   className="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-150"
                   style={
                     isActive
-                      ? { background: "#F59E0B", color: "white", border: "1.5px solid #F59E0B" }
+                      ? {
+                          background: "#F59E0B",
+                          color: "white",
+                          border: "1.5px solid #F59E0B",
+                        }
                       : {
                           background: "rgba(255,255,255,0.04)",
                           color: "rgba(255,255,255,0.45)",
