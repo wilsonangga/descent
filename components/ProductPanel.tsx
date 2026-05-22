@@ -48,7 +48,7 @@ function ProductCard({
       )}
 
       {/* Image */}
-      <div className="relative flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden bg-stone-100">
+      <div className="relative shrink-0 w-14 h-14 rounded-lg overflow-hidden bg-stone-100">
         <Image
           src={product.image}
           alt={product.name}

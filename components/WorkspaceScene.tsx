@@ -68,16 +68,16 @@ export default function WorkspaceScene({ state }: Props) {
   return (
     <div className="relative w-full h-full overflow-hidden rounded-2xl select-none">
       {/* ── ROOM BACKGROUND ── */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#F5EDE0] via-[#EFE3D0] to-[#D4B896]" />
+      <div className="absolute inset-0 bg-linear-to-b from-[#F5EDE0] via-[#EFE3D0] to-[#D4B896]" />
 
       {/* Wall texture / tropical accent */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-[#C8A86B] to-transparent rounded-full blur-3xl" />
-        <div className="absolute top-0 left-0 w-48 h-48 bg-gradient-to-br from-[#7BAE7F] to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-linear-to-bl from-[#C8A86B] to-transparent rounded-full blur-3xl" />
+        <div className="absolute top-0 left-0 w-48 h-48 bg-linear-to-br from-[#7BAE7F] to-transparent rounded-full blur-3xl" />
       </div>
 
       {/* ── WALL SECTION (top 55%) ── */}
-      <div className="absolute inset-x-0 top-0 h-[55%] bg-gradient-to-b from-[#FBF4EB] to-[#F0E5D0]" />
+      <div className="absolute inset-x-0 top-0 h-[55%] bg-linear-to-b from-[#FBF4EB] to-[#F0E5D0]" />
 
       {/* Window light effect */}
       <div
@@ -106,7 +106,7 @@ export default function WorkspaceScene({ state }: Props) {
       />
 
       {/* Wall / floor divider */}
-      <div className="absolute inset-x-0 h-[3px] bg-[#C4A07A]/60" style={{ top: '54%' }} />
+      <div className="absolute inset-x-0 h-0.75 bg-[#C4A07A]/60" style={{ top: '54%' }} />
 
       {/* ── PLANT (left side, floor) ── */}
       {hasPlant && (
@@ -166,7 +166,7 @@ export default function WorkspaceScene({ state }: Props) {
       >
         {/* Desk surface highlight */}
         <div
-          className="absolute top-0 inset-x-4 h-[3px] rounded-full opacity-30"
+          className="absolute top-0 inset-x-4 h-0.75 rounded-full opacity-30"
           style={{ background: 'rgba(255,255,255,0.6)' }}
         />
 
